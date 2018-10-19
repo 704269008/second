@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.PermissionMapper">
+  <resultMap id="BaseResultMap" type="com.example.pojo.Permission">
+    <id column="resource_id" jdbcType="BIGINT" property="resource_id" />
+    <result column="resource_name" jdbcType="VARCHAR" property="resource_name" />
+    <result column="resource_url" jdbcType="VARCHAR" property="resource_url" />
+    <result column="desc_" jdbcType="VARCHAR" property="desc_" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    resource_id, resource_name, resource_url, desc_
+  </sql>
+  <select id="selectByExample" parameterType="com.example.pojo.PermissionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from sys_permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_permission
+    where resource_id = #{resource_id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_permission
+    where resource_id = #{resource_id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="resource_id" keyProperty="resource_id" parameterType="com.example.pojo.Permission" useGeneratedKeys="true">
+    insert into sys_permission (resource_name, resource_url, desc_
+      )
+    values (#{resource_name,jdbcType=VARCHAR}, #{resource_url,jdbcType=VARCHAR}, #{desc_,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="resource_id" keyProperty="resource_id" parameterType="com.example.pojo.Permission" useGeneratedKeys="true">
+    insert into sys_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="resource_name != null">
+        resource_name,
+      </if>
+      <if test="resource_url != null">
+        resource_url,
+      </if>
+      <if test="desc_ != null">
+        desc_,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="resource_name != null">
+        #{resource_name,jdbcType=VARCHAR},
+      </if>
+      <if test="resource_url != null">
+        #{resource_url,jdbcType=VARCHAR},
+      </if>
+      <if test="desc_ != null">
+        #{desc_,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.Permission">
+    update sys_permission
+    <set>
+      <if test="resource_name != null">
+        resource_name = #{resource_name,jdbcType=VARCHAR},
+      </if>
+      <if test="resource_url != null">
+        resource_url = #{resource_url,jdbcType=VARCHAR},
+      </if>
+      <if test="desc_ != null">
+        desc_ = #{desc_,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where resource_id = #{resource_id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.pojo.Permission">
+    update sys_permission
+    set resource_name = #{resource_name,jdbcType=VARCHAR},
+      resource_url = #{resource_url,jdbcType=VARCHAR},
+      desc_ = #{desc_,jdbcType=VARCHAR}
+    where resource_id = #{resource_id,jdbcType=BIGINT}
+  </update>
+</mapper>
