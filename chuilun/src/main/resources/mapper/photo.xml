@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jns.mapper.PhotoMapper">
+    <resultMap id="photo" type="Photo">
+        <id column="id" property="id"/>
+        <result column="photo_name" property="photoName"/>
+        <result column="photo_type" property="photoType"/>
+        <result column="shelf_time" property="shelfTime"/>
+        <result column="down_time" property="downTime"/>
+    </resultMap>
+    <select id="photoList" resultMap="photo">
+        select * from photo
+     </select>
+    <insert id="add" parameterType="Photo">
+        insert into photo(photo_name,photo_type,shelf_time,down_time,guestbook,img)
+        values(#{photoName},#{photoType},#{shelfTime},#{downTime},#{guestbook},#{img})
+    </insert>
+    <update id="update" parameterType="Photo">
+        update photo set photo_name=#{photoName},photo_type=#{photoType},shelf_time=#{shelfTime},down_time=#{downTime},guestbook=#{guestbook},img=#{img} where id=#{id}
+    </update>
+    <delete id="delete" parameterType="_int">
+        delete from photo where id=#{id}
+    </delete>
+    <select id="get" parameterType="_int" resultMap="photo">
+        select * from photo where id=#{id}
+    </select>
+    <select id="findByPage" parameterType="Map" resultMap="photo">
+        select * from photo
+        <if test="#{start} and #{size}">
+            limit #{start},#{size}
+        </if>
+    </select>
+    <select id="total" resultType="_int">
+        select count(*) from photo
+    </select>
+</mapper>
