@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:tuscany="http://tuscany.apache.org/xmlns/sca/1.0" xmlns:scallop="http://scallop/xmlns/sca/1.0"
+           targetNamespace="http://sns.sohu.com/home/composite" xmlns:sample="http://sns.sohu.com/home/composite" name="HomeComposite">
+	
+
+
+
+
+    	
+	
+	 <!-- AcademyRichComponent -->
+	 
+	     <component name = "UserServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.UserSCAClient"/>
+    	   
+    	<reference name = "userService">
+    		<scallop:binding.rmi registryName = "user-academy-rich-admin-service-rmi" serviceName="UserRMIService"/>
+    	</reference>
+    </component >
+        <component name = "UserSignServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.UserSignSCAClient"/>
+    	   
+    	<reference name = "userSignService">
+    		<scallop:binding.rmi registryName = "userSign-academy-rich-admin-service-rmi" serviceName="UserSignRMIService"/>
+    	</reference>
+    </component >
+        <component name = "ArticleServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.ArticleSCAClient"/>
+    	   
+    	<reference name = "articleService">
+    		<scallop:binding.rmi registryName = "article-academy-rich-admin-service-rmi" serviceName="ArticleRMIService"/>
+    	</reference>
+    </component >
+        <component name = "UserArticleUpvoteServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.UserArticleUpvoteSCAClient"/>
+    	   
+    	<reference name = "userArticleUpvoteService">
+    		<scallop:binding.rmi registryName = "userArticleUpvote-academy-rich-admin-service-rmi" serviceName="UserArticleUpvoteRMIService"/>
+    	</reference>
+    </component >
+        <component name = "UserArticleCollectServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.UserArticleCollectSCAClient"/>
+    	   
+    	<reference name = "userArticleCollectService">
+    		<scallop:binding.rmi registryName = "userArticleCollect-academy-rich-admin-service-rmi" serviceName="UserArticleCollectRMIService"/>
+    	</reference>
+    </component >
+        <component name = "VideoServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.VideoSCAClient"/>
+    	   
+    	<reference name = "videoService">
+    		<scallop:binding.rmi registryName = "video-academy-rich-admin-service-rmi" serviceName="VideoRMIService"/>
+    	</reference>
+    </component >
+        <component name = "UserVideoUpvoteServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.UserVideoUpvoteSCAClient"/>
+    	   
+    	<reference name = "userVideoUpvoteService">
+    		<scallop:binding.rmi registryName = "userVideoUpvote-academy-rich-admin-service-rmi" serviceName="UserVideoUpvoteRMIService"/>
+    	</reference>
+    </component >
+        <component name = "UserVideoCollectServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.UserVideoCollectSCAClient"/>
+    	   
+    	<reference name = "userVideoCollectService">
+    		<scallop:binding.rmi registryName = "userVideoCollect-academy-rich-admin-service-rmi" serviceName="UserVideoCollectRMIService"/>
+    	</reference>
+    </component >
+        <component name = "TeacherServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.TeacherSCAClient"/>
+    	   
+    	<reference name = "teacherService">
+    		<scallop:binding.rmi registryName = "teacher-academy-rich-admin-service-rmi" serviceName="TeacherRMIService"/>
+    	</reference>
+    </component >
+        <component name = "AccountServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.AccountSCAClient"/>
+    	   
+    	<reference name = "accountService">
+    		<scallop:binding.rmi registryName = "account-academy-rich-admin-service-rmi" serviceName="AccountRMIService"/>
+    	</reference>
+    </component >
+        <component name = "RoleServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.RoleSCAClient"/>
+    	   
+    	<reference name = "roleService">
+    		<scallop:binding.rmi registryName = "role-academy-rich-admin-service-rmi" serviceName="RoleRMIService"/>
+    	</reference>
+    </component >
+        <component name = "ModuleServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.ModuleSCAClient"/>
+    	   
+    	<reference name = "moduleService">
+    		<scallop:binding.rmi registryName = "module-academy-rich-admin-service-rmi" serviceName="ModuleRMIService"/>
+    	</reference>
+    </component >
+        <component name = "RoleModuleServiceComponent">
+    	<implementation.java class = "com.ptteng.sca.academy.rich.client.RoleModuleSCAClient"/>
+    	   
+    	<reference name = "roleModuleService">
+    		<scallop:binding.rmi registryName = "roleModule-academy-rich-admin-service-rmi" serviceName="RoleModuleRMIService"/>
+    	</reference>
+    </component >
+    	
+	
+</composite>
+
