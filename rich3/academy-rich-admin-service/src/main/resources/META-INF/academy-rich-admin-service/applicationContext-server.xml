@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:sca="http://www.springframework.org/schema/sca"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+            http://www.springframework.org/schema/sca http://www.springframework.org/schema/sca/spring-sca.xsd">
+
+	<context:component-scan base-package="com.ptteng.academy.rich" />
+
+	
+		<sca:service name="userService"
+		type="com.ptteng.academy.rich.service.UserService" target="userService" />
+		
+	
+		<sca:service name="userSignService"
+		type="com.ptteng.academy.rich.service.UserSignService" target="userSignService" />
+		
+	
+		<sca:service name="articleService"
+		type="com.ptteng.academy.rich.service.ArticleService" target="articleService" />
+		
+	
+		<sca:service name="userArticleUpvoteService"
+		type="com.ptteng.academy.rich.service.UserArticleUpvoteService" target="userArticleUpvoteService" />
+		
+	
+		<sca:service name="userArticleCollectService"
+		type="com.ptteng.academy.rich.service.UserArticleCollectService" target="userArticleCollectService" />
+		
+	
+		<sca:service name="videoService"
+		type="com.ptteng.academy.rich.service.VideoService" target="videoService" />
+		
+	
+		<sca:service name="userVideoUpvoteService"
+		type="com.ptteng.academy.rich.service.UserVideoUpvoteService" target="userVideoUpvoteService" />
+		
+	
+		<sca:service name="userVideoCollectService"
+		type="com.ptteng.academy.rich.service.UserVideoCollectService" target="userVideoCollectService" />
+		
+	
+		<sca:service name="teacherService"
+		type="com.ptteng.academy.rich.service.TeacherService" target="teacherService" />
+		
+	
+		<sca:service name="accountService"
+		type="com.ptteng.academy.rich.service.AccountService" target="accountService" />
+		
+	
+		<sca:service name="roleService"
+		type="com.ptteng.academy.rich.service.RoleService" target="roleService" />
+		
+	
+		<sca:service name="moduleService"
+		type="com.ptteng.academy.rich.service.ModuleService" target="moduleService" />
+		
+	
+		<sca:service name="roleModuleService"
+		type="com.ptteng.academy.rich.service.RoleModuleService" target="roleModuleService" />
+		
+	
+		
+	
+	 
+	
+	
+
+
+	
+
+
+
+	
+		
+	<bean id="userService"
+		class="com.ptteng.academy.rich.service.impl.UserServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="userSignService"
+		class="com.ptteng.academy.rich.service.impl.UserSignServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="articleService"
+		class="com.ptteng.academy.rich.service.impl.ArticleServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="userArticleUpvoteService"
+		class="com.ptteng.academy.rich.service.impl.UserArticleUpvoteServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="userArticleCollectService"
+		class="com.ptteng.academy.rich.service.impl.UserArticleCollectServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="videoService"
+		class="com.ptteng.academy.rich.service.impl.VideoServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="userVideoUpvoteService"
+		class="com.ptteng.academy.rich.service.impl.UserVideoUpvoteServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="userVideoCollectService"
+		class="com.ptteng.academy.rich.service.impl.UserVideoCollectServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="teacherService"
+		class="com.ptteng.academy.rich.service.impl.TeacherServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="accountService"
+		class="com.ptteng.academy.rich.service.impl.AccountServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="roleService"
+		class="com.ptteng.academy.rich.service.impl.RoleServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="moduleService"
+		class="com.ptteng.academy.rich.service.impl.ModuleServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+	<bean id="roleModuleService"
+		class="com.ptteng.academy.rich.service.impl.RoleModuleServiceImpl" parent="baseDaoService">
+
+	</bean>
+		
+
+<bean id="dao" class="com.gemantic.dal.dao.impl.CompositeDaoImpl" />
+
+	<bean id="baseDaoService"
+		class="com.ptteng.common.dao.BaseDaoServiceImpl">
+		<property name="dao" ref="dao" />
+	</bean>
+
+
+
+
+
+
+	<!-- performance -->
+	<aop:aspectj-autoproxy />
+	<bean id="aroundLoggingTime" class="com.gemantic.common.stat.aop.time.AroundTimeConsume" />
+	<aop:config>
+		<aop:aspect ref="aroundLoggingTime">
+			<aop:pointcut id="publicServiceMethod"
+				expression="execution(* com.gemantic..service.*.*(..)) " />
+			<aop:around method="around" pointcut-ref="publicServiceMethod" />
+		</aop:aspect>
+	</aop:config>
+
+</beans>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:tuscany="http://tuscany.apache.org/xmlns/sca/1.0"
+    xmlns:scallop="http://scallop/xmlns/sca/1.0"
+    targetNamespace="http://AcademyRichComponent" xmlns:sample="http://AcademyRichComponent" name="AcademyRichComponent">
+
+
+  <component name="AcademyRichComponent">
+    <implementation.spring location="META-INF/academy-rich-admin-service/applicationContext-server.xml" />
+  </component>
+  
+	  <service name="userService" promote="AcademyRichComponent/userService">
+    <interface.java interface="com.ptteng.academy.rich.service.UserService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="UserRMIService"/>     
+  </service>
+	  <service name="userSignService" promote="AcademyRichComponent/userSignService">
+    <interface.java interface="com.ptteng.academy.rich.service.UserSignService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="UserSignRMIService"/>     
+  </service>
+	  <service name="articleService" promote="AcademyRichComponent/articleService">
+    <interface.java interface="com.ptteng.academy.rich.service.ArticleService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="ArticleRMIService"/>     
+  </service>
+	  <service name="userArticleUpvoteService" promote="AcademyRichComponent/userArticleUpvoteService">
+    <interface.java interface="com.ptteng.academy.rich.service.UserArticleUpvoteService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="UserArticleUpvoteRMIService"/>     
+  </service>
+	  <service name="userArticleCollectService" promote="AcademyRichComponent/userArticleCollectService">
+    <interface.java interface="com.ptteng.academy.rich.service.UserArticleCollectService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="UserArticleCollectRMIService"/>     
+  </service>
+	  <service name="videoService" promote="AcademyRichComponent/videoService">
+    <interface.java interface="com.ptteng.academy.rich.service.VideoService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="VideoRMIService"/>     
+  </service>
+	  <service name="userVideoUpvoteService" promote="AcademyRichComponent/userVideoUpvoteService">
+    <interface.java interface="com.ptteng.academy.rich.service.UserVideoUpvoteService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="UserVideoUpvoteRMIService"/>     
+  </service>
+	  <service name="userVideoCollectService" promote="AcademyRichComponent/userVideoCollectService">
+    <interface.java interface="com.ptteng.academy.rich.service.UserVideoCollectService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="UserVideoCollectRMIService"/>     
+  </service>
+	  <service name="teacherService" promote="AcademyRichComponent/teacherService">
+    <interface.java interface="com.ptteng.academy.rich.service.TeacherService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="TeacherRMIService"/>     
+  </service>
+	  <service name="accountService" promote="AcademyRichComponent/accountService">
+    <interface.java interface="com.ptteng.academy.rich.service.AccountService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="AccountRMIService"/>     
+  </service>
+	  <service name="roleService" promote="AcademyRichComponent/roleService">
+    <interface.java interface="com.ptteng.academy.rich.service.RoleService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="RoleRMIService"/>     
+  </service>
+	  <service name="moduleService" promote="AcademyRichComponent/moduleService">
+    <interface.java interface="com.ptteng.academy.rich.service.ModuleService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="ModuleRMIService"/>     
+  </service>
+	  <service name="roleModuleService" promote="AcademyRichComponent/roleModuleService">
+    <interface.java interface="com.ptteng.academy.rich.service.RoleModuleService"/> 
+    <scallop:binding.rmi host="localhost" port="20693" serviceName="RoleModuleRMIService"/>     
+  </service>
+	
+	
+	 
+  
+	
+
+
+</composite>
+
