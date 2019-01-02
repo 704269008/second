@@ -1,0 +1,199 @@
+<div class="row pd-top-2">
+    <div class=" col-md-12 pd-top-2 pd-bottom-2  panel panel-default">
+        <form class="form-inline form-search" role="form">
+           
+           
+                        <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">视频id名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.id">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">标题名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.title">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">视频类型名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.type">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">视频图片名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.img">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">视频链接名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.url">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">年级名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.grade">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">科目名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.subject">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">视频简介：限制140个字名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.summary">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">正文内容名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.content">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">收藏数名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.collection">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">点赞数名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.upvote">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">视频状态，上架1，下架2名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.status">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">创建人名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.createBy">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">修改人名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.updateBy">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">创建时间名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.createAt">
+            </div>
+                 
+                      <div class="form-group col-md-4 col-md-offset-1">
+                <label class="control-label">更新时间名称：</label>
+                <input type="text" class="form-control" ng-model="vm.params.updateAt">
+            </div>
+                 
+                     
+         
+           
+            <div class="form-group col-md-6 col-md-offset-1">
+         
+                <button class="btn btn-primary pull-right"style="margin-right: 2%;"
+                        ng-click="vm.search()">查询
+                </button>
+                <button class="btn btn-primary pull-right"
+                        ng-if="vm.hasParent" ng-click="vm.research()"
+                        style="margin-right:2%;">重置
+                </button>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class=" col-md-12 ">
+            <div class="  panel panel-default">
+                <div class="panel-heading">
+                
+                
+                    管理
+                    <div class="btn-group pull-right" ng-if="vm.params.id">
+                        <div class="btn btn-primary btn-xs" ng-if="globalPermission.created" ui-sref="field.video()">
+                            <i class="fa fa-plus-square fa-fw"></i>
+                            新增
+                        </div>
+                    </div>
+           
+                    
+                    
+                    
+                    
+                </div>
+
+                <div class="panel-body">
+                    <ul class="ul-table-head row">
+                        <li>
+                        
+                            <div class="three1 text-center">序号</div>
+                                                                                           <div class="three1 text-center">视频id</div>  
+                                                                                                                           <div class="three1 text-center">标题</div>  
+                                                                                                                           <div class="three1 text-center">视频类型</div>  
+                                                                                                                           <div class="three1 text-center">视频图片</div>  
+                                                                                                                           <div class="three1 text-center">视频链接</div>  
+                                                                                                                           <div class="three1 text-center">年级</div>  
+                                                                                                                           <div class="three1 text-center">科目</div>  
+                                                                                                                           <div class="three1 text-center">视频简介：限制140个字</div>  
+                                                                                                                           <div class="three1 text-center">正文内容</div>  
+                                                                                                                           <div class="three1 text-center">收藏数</div>  
+                                                                                                                           <div class="three1 text-center">点赞数</div>  
+                                                                                                                           <div class="three1 text-center">视频状态，上架1，下架2</div>  
+                                                                                                                           <div class="three1 text-center">创建人</div>  
+                                                                                                                           <div class="three1 text-center">修改人</div>  
+                                                                                                                           <div class="three1 text-center">创建时间</div>  
+                                                                                                                           <div class="three1 text-center">更新时间</div>  
+                                                                                         <div class="three3 text-center">操作</div>
+                          
+                            
+                        </li>
+                    </ul>
+                    <ul class="ul-table" dnd-list="vm.list">
+                        <li ng-repeat="item in vm.list"
+                            dnd-draggable="item"
+                            dnd-moved="vm.list.splice(16, 1)"
+                            dnd-effect-allowed="move"
+                            dnd-selected="vm.list.selected = item"
+                            ng-class="{'selected': vm.list.selected === item}"
+                        >
+                            <div class="three1">{{16*1+1}}</div>
+                                                                                           <div class="three2">{{item.id}}</div>  
+                                                                                                                            <div class="three2">{{item.title}}</div>  
+                                                                                                                            <div class="three2">{{item.type}}</div>  
+                                                                                                                            <div class="three2">{{item.img}}</div>  
+                                                                                                                            <div class="three2">{{item.url}}</div>  
+                                                                                                                            <div class="three2">{{item.grade}}</div>  
+                                                                                                                            <div class="three2">{{item.subject}}</div>  
+                                                                                                                            <div class="three2">{{item.summary}}</div>  
+                                                                                                                            <div class="three2">{{item.content}}</div>  
+                                                                                                                            <div class="three2">{{item.collection}}</div>  
+                                                                                                                            <div class="three2">{{item.upvote}}</div>  
+                                                                                                                            <div class="three2">{{item.status}}</div>  
+                                                                                                                            <div class="three2">{{item.createBy}}</div>  
+                                                                                                                            <div class="three2">{{item.updateBy}}</div>  
+                                                                                                                            <div class="three2">{{item.createAt}}</div>  
+                                                                                                                            <div class="three2">{{item.updateAt}}</div>  
+                                                                                         
+                           
+                            
+                            
+                            
+                            <div class="three3">
+                              
+                                <button class="btn btn-default btn-xs"
+                                        ui-sref="field.video({id:item.id})">查看
+                                </button>
+                                <button class="btn btn-default btn-xs"  ng-if="globalPermission.updated"
+                                        ui-sref="field.video({id:item.id})">编辑
+                                </button>
+                                <button class="btn btn-danger btn-xs" ng-if="globalPermission.deleted" data-toggle="modal" data-target="#myModal"
+                                        ng-click="vm.del(item.id, 16)">删除
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<paging ng-if="vm.page" next="{{vm.page}}"></paging>
+
