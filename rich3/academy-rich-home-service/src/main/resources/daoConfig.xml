@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dal>
+	<list>
+		
+				
+		
+		<config>
+			<path>user_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>userSign_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>article_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>userArticleUpvote_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>userArticleCollect_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>video_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>userVideoUpvote_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>userVideoCollect_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>teacher_dao.xml</path>
+		</config>
+				
+		
+		<config>
+			<path>wechatData_dao.xml</path>
+		</config>
+						
+		
+		
+	</list>
+
+	<default>
+		<dbStrategy name=""
+			clasz="com.gemantic.dal.route.strategy.DefaultStrategy">
+			<pattern value="[0-9]$" group="g1" />
+		</dbStrategy>
+		<listenerClass className="" />
+		<idCenterDS ds="idCenterDS" />
+	</default>
+</dal>                

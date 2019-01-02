@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dal>
+	<route>
+		<object name="com.ptteng.academy.rich.model.UserSign"
+			listenerClass="" strategyProperty="">
+			
+			
+			
+						
+			
+					<map name="getUserSignIdByUserId"
+				sqlitem="select id from user_sign where user_id = ?"
+				keyProperty="userId" valueProperty="id" keyColumn="user_id" />
+						
+			
+					<list name="getUserSignIdsAll" sqlitem="select id from user_sign where 1 = 1 order by create_at desc"
+				keyProperty="version" valueProperty="id" keyColumn="version" />
+			
+			<dbStrategy name="mutiDS"
+                clasz="com.gemantic.dal.route.strategy.DefaultStrategy">  <pattern value="[0-9]$" group="academy_rich" />
+            </dbStrategy>
+			
+		</object>
+	</route>
+</dal>
