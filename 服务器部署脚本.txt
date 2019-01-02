@@ -1,0 +1,536 @@
+
+svn代码上传至服务器
+
+
+#!/bin/sh 
+
+echo "删除 cubilose Service run下冗余代码"
+cd /data/services/cubilose/run
+rm -rf classes
+rm -rf lib
+rm -rf cubilose-service.tar.gz
+
+
+
+echo "删除 admin web run下冗余代码"
+cd /data/webs/cubilose/cubilose-admin-web/run/
+rm -rf cubilose-admin-web.war
+rm -rf index.jsp
+rm -rf META-INF
+rm -rf r
+rm -rf WEB-INF
+
+echo "删除 home web run下冗余代码"
+cd /data/webs/cubilose/cubilose-home-web/run/
+rm -rf cubilose-home-web.war
+rm -rf index.jsp
+rm -rf META-INF
+rm -rf r
+rm -rf WEB-INF
+
+cd /data/svn/cubilose/
+
+echo "删除 trunk 后端代码"
+rm -rf trunk
+
+echo "更新 cubolise 后端代码"
+svn checkout svn://wx.ptteng.com/ptteng/cubilose/trunk
+
+
+echo "打包 cubolise Service"
+cd /data/svn/cubilose/trunk/cubilose-service/
+mvn clean install -Dmaven.test.skip=true assembly:assembly
+cd target/
+cp cubilose-service.tar.gz /data/services/cubilose/run
+
+
+echo "打包 admin web"
+cd /data/svn/cubilose/trunk/cubilose-admin-web/
+mvn clean install -Dmaven.test.skip=true
+cd target/
+cp cubilose-admin-web.war /data/webs/cubilose/cubilose-admin-web/run/
+
+echo "打包 home web"
+cd /data/svn/cubilose/trunk/cubilose-home-web/
+mvn clean install -Dmaven.test.skip=true
+cd target/
+cp cubilose-home-web.war /data/webs/cubilose/cubilose-home-web/run/
+
+
+echo "进入 Service run并解压tar包"
+cd /data/services/cubilose/run
+tar -zxvf cubilose-service.tar.gz
+
+
+echo "进入 admin web run并解压war包"
+cd /data/webs/cubilose/cubilose-admin-web/run/
+jar -xvf cubilose-admin-web.war
+
+
+echo "进入 home web run并解压war包"
+cd /data/webs/cubilose/cubilose-home-web/run/
+jar -xvf cubilose-home-web.war
+
+cd /data/deploy
+echo "当前位置为 service、web 启动脚本"
+
+echo "cubilose-start.sh一键启动脚本"
+echo "cubilose-stop.sh一键停止脚本"
+
+
+echo "祝你好运！"
+
+
+
+
+
+
+
+
+
+
+前台产品逻辑：
+
+系列下的产品：
+
+type=7 ，获取系列名称，每个系列下 ，也就是有一个或多个产品
+
+type=1， 获取所有产品，产品下有个分类sort_id，记录自己属于哪一个系列
+
+
+
+
+
+
+
+后端前台代码更新
+
+first=/data/webs/cubilose/cubilose-home-web/cubilose-home-web
+
+second=/data/webs/cubilose/cubilose-home-web/cubilose-home-web
+
+last=/data/webs/cubilose/cubilose-home-web
+
+log4j=/data/webs/cubilose/cubilose-home-web/logs
+
+cd $first
+echo "开始update代码.."
+svn update
+echo "update完成.."
+
+cd $second
+echo "开始执行clean install.."
+mvn clean install
+echo "执行完成clean install.."
+
+echo "开始删除$last/run.."
+rm -rf $last/run/*
+echo "删除完成$last/run.."
+
+file_name=`ls target | grep war`
+echo "开始复制war包到$last/run.."
+cp -r target/$file_name $last/run/
+echo "复制war包到$last/run.."
+
+cd $first
+echo "开始删除target.."
+rm -rf target
+echo "删除完成target.."
+
+cd $last/run/
+echo "开始解压war包.."
+jar -xvf $file_name
+echo "解压完成war包.."
+
+echo "准备覆盖log4j配置文件.."
+cp -rf $log4j/log4j.properties $last/run/WEB-INF/classes/
+echo "覆盖log4j配置文件.."
+
+echo "重启home-web.."
+cd ../deploy
+sh stop.sh
+sh start.sh
+
+
+后端前台web开启
+
+sh /data/webs/cubilose/cubilose-home-web/containers/resin/bin/resin.sh  start
+
+
+后端前台web关闭
+
+sh /data/webs/cubilose/cubilose-home-web/containers/resin/bin/resin.sh  stop
+
+
+
+后端后台web更新代码
+
+first=/data/webs/cubilose/cubilose-admin-web/cubilose-admin-web
+
+second=/data/webs/cubilose/cubilose-admin-web/cubilose-admin-web
+
+last=/data/webs/cubilose/cubilose-admin-web
+
+log4j=/data/webs/cubilose/cubilose-admin-web/logs
+
+cd $first
+echo "开始update代码.."
+svn update
+echo "update完成.."
+
+cd $second
+echo "开始执行clean install.."
+mvn clean install
+echo "执行完成clean install.."
+
+echo "开始删除$last/run.."
+rm -rf $last/run/*
+echo "删除完成$last/run.."
+
+file_name=`ls target | grep war`
+echo "开始复制war包到$last/run.."
+cp -r target/$file_name $last/run/
+echo "复制war包到$last/run.."
+
+cd $first
+echo "开始删除target.."
+rm -rf target
+echo "删除完成target.."
+
+cd $last/run/
+echo "开始解压war包.."
+jar -xvf $file_name
+echo "解压完成war包.."
+
+echo "准备覆盖log4j配置文件.."
+cp -rf $log4j/log4j.properties $last/run/WEB-INF/classes/
+echo "覆盖log4j配置文件.."
+
+echo "重启admin-web.."
+cd ../deploy
+sh stop.sh
+sh start.sh
+
+
+开启后端后台web
+
+sh /data/webs/cubilose/cubilose-admin-web/containers/resin/bin/resin.sh  start
+
+关闭后端后台web
+
+sh /data/webs/cubilose/cubilose-admin-web/containers/resin/bin/resin.sh  stop
+
+
+后端service更新代码 
+
+first=/data/services/cubilose/cubilose-service
+
+second=/data/services/cubilose/cubilose-service
+
+last=/data/services/cubilose
+
+log4j=/data/services/cubilose/logs
+
+
+
+cd $first
+echo "开始checkout代码.."
+svn update
+echo "checkout完成.."
+
+
+cd $second
+echo "开始执行clean install.."
+mvn clean install   -Dmaven.test.skip=true  assembly:assembly
+echo "执行完成clean install.."
+
+echo "开始删除$last/run.."
+rm -rf $last/run/*
+echo "删除完成$last/run.."
+
+file_name=`ls target | grep tar`
+echo "开始复制tar包到$last/run.."
+cp -r target/$file_name $last/run/
+
+cd $first
+echo "开始删除/cubilose-service/.."
+rm -rf /cubilose-service/
+echo "删除完成/cubilose-service/.."
+
+cd $last/run/
+echo "开始解压tar包.."
+tar -xzvf $file_name
+echo "解压完成tar包.."
+
+echo "准备覆盖log4j配置文件.."
+cp -rf $log4j/log4j.properties $last/run/classes/
+echo "覆盖log4j配置文件.."
+
+echo "重启admin-service.."
+cd ../deploy
+sh stop.sh
+sh start.sh
+
+
+
+发布service
+
+
+#!/bin/sh
+HELLO_SERVICE_HOME=/data/services/cubilose
+LIB_DIR=${HELLO_SERVICE_HOME}/run/lib
+LOGS_DIR=${HELLO_SERVICE_HOME}/logs
+ARCHIVE_SUFFIX=`date +%Y%m%d-%H%M`
+MAIN_CLASS="com.cubilose.server.Server"
+JAVA_ARGS="${JAVA_ARGS} -Dsun.rmi.dgc.server.gcInterval=3600000 -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.server.exceptionTrace=true"
+CLASSPATH=$CLASSPATH:${HELLO_SERVICE_HOME}/run/classes/
+files=`ls -1 ${LIB_DIR}`
+for file in ${files} ;do
+        CLASSPATH=$CLASSPATH:${LIB_DIR}/${file}
+done
+mv ${LOGS_DIR}/stdout.log ${LOGS_DIR}/stdout.log.${ARCHIVE_SUFFIX} 
+mv ${LOGS_DIR}/stderr.log ${LOGS_DIR}/stderr.log.${ARCHIVE_SUFFIX} 
+mv ${LOGS_DIR}/gc.log ${LOGS_DIR}/gc.log.${ARCHIVE_SUFFIX} 
+export CLASSPATH
+
+java   ${JAVA_ARGS} ${MAIN_CLASS}  1>${HELLO_SERVICE_HOME}/logs/stdout.log 2>${HELLO_SERVICE_HOME}/logs/stderr.log&
+
+
+关闭service
+
+#!/bin/sh
+#kill server
+SERVER_PID=`ps auxf | grep com.cubilose.server.Server | grep -v "grep"| awk '{print $2}'`
+echo "hello interface server pid is ${SERVER_PID}"
+if [ -n $SERVER_PID ]
+then
+  kill $SERVER_PID
+  echo "$SERVER_PID is killed!"
+fi
+
+echo "删除前端前台代码"
+rm -rf /data/software-server/nginx/nginx/html/cubilose-html/trunk
+
+echo "重新拉去前端前台代码"
+main=/data/software-server/nginx/nginx/html/cubilose-html/
+target=/data/software-server/nginx/nginx/html/cubilose-html/project/
+cd $main
+svn checkout svn://wx.ptteng.com/ptteng/cubilose-html/trunk
+#svn update
+echo "update over, start deploy"
+
+rm -rf  $target/*
+cp -f -R $main/trunk/* $target/
+echo "deploy over"
+
+
+
+data/deploy 部署脚本。前端和后端
+
+cubilose-admin-html-trunk.sh
+
+tag=$1
+main=/data/software-server/nginx/nginx/html/cubilose-admin-html/trunk
+target=/data/software-server/nginx/nginx/html/cubilose-admin-html/project/
+nginx=/data/software-server/nginx/nginx/sbin/
+
+cd $main
+#svn checkout svn://wx.ptteng.com/ptteng/cubilose-html/
+svn update
+
+echo " update over "
+#echo " start deploy "
+
+rm -rf $target/*
+cp -f -R $main/$tag/* $starget/
+
+echo " deploy over "
+
+#echo " reload nginx "
+#cd $nginx
+#./nginx -s reload
+#echo " reload nginx over "
+
+
+
+cubilose-html-branches.sh
+
+tag=$1
+main=/data/software-server/nginx/nginx/html/cubilose-html/branches
+target=/data/software-server/nginx/nginx/html/cubilose-html/project/
+cd $main
+#svn checkout svn://wx.ptteng.com/ptteng/cubilose-html/
+svn update
+echo "update over, start deploy"
+
+rm -rf  $target/*
+cp -f -R $main/$tag/* $target/
+echo "deploy over"
+
+
+
+
+cubilose-html-bran.sh
+
+#! /bin/bash
+cd /data/software-server/nginx/nginx/html/cubilose-html/branches/cubilose-html-1.0.2
+svn update
+cd /data/software-server/nginx/nginx/html/cubilose-html/project
+rm -rf images index.html js style views
+cp -f -R /data/software-server/nginx/nginx/html/cubilose-html/branches/cubilose-html-1.0.2/* /data/software-server/nginx/nginx/html/cubilose-html/project
+
+
+cubilose-html-tags.sh
+
+tag=$1
+main=/data/software-server/nginx/nginx/html/cubilose-html/tags
+target=/data/software-server/nginx/nginx/html/cubilose-html/project/
+cd $main
+#svn checkout svn://wx.ptteng.com/ptteng/cubilose-html/
+svn update
+echo "update over, start deploy"
+
+rm -rf  $target/*
+cp -f -R $main/$tag/* $target/
+echo "deploy over"
+
+
+cubilose-html-trunk.sh
+
+tag=$1
+main=/data/software-server/nginx/nginx/html/cubilose-html/trunk
+target=/data/software-server/nginx/nginx/html/cubilose-html/project/
+cd $main
+#svn checkout svn://wx.ptteng.com/ptteng/cubilose-html/
+svn update
+echo "update over, start deploy"
+
+rm -rf  $target/*
+cp -f -R $main/$tag/* $target/
+echo "deploy over"
+
+
+cubilose-start.sh
+
+sh /data/services/cubilose/deploy/start.sh
+sh /data/webs/cubilose/cubilose-home-web/deploy/start.sh
+sh /data/webs/cubilose/cubilose-admin-web/deploy/start.sh
+
+
+cubilose-stop.sh
+
+sh /data/webs/cubilose/cubilose-home-web/deploy/stop.sh
+sh /data/webs/cubilose/cubilose-admin-web/deploy/stop.sh
+sh /data/services/cubilose/deploy/stop.sh
+
+
+后台resin.xml配置
+
+<resin xmlns="http://caucho.com/ns/resin"
+       xmlns:resin="urn:java:com.caucho.resin">
+
+  <resin:properties path="${__DIR__}/resin.properties" optional="true"/>
+
+  <log-handler name="" level="all" path="stdout:"
+               timestamp="[%y-%m-%d %H:%M:%S.%s]"
+               format=" {${thread}} ${log.message}"/>
+               
+  <logger name="" level="${log_level?:'fine'}"/>
+  <logger name="com.caucho.java" level="config"/>
+  <logger name="com.caucho.loader" level="config"/>
+  <resin:import path="${__DIR__}/cluster-default.xml"/>
+  <dependency-check-interval>1200s</dependency-check-interval>
+  <home-cluster>${home_cluster}</home-cluster>
+  <home-server>${home_server}</home-server>
+  <elastic-server>${elastic_server}</elastic-server>
+  <elastic-dns>${elastic_dns}</elastic-dns>
+
+  <cluster id="ptteng">
+
+    <server-default>
+             <jvm-arg> -Xms128m</jvm-arg>
+             <jvm-arg> -XX:PermSize=128m</jvm-arg>
+             <jvm-mode> -server   </jvm-mode>
+       <socket-timeout> 30s </socket-timeout>
+       <keepalive-max>512</keepalive-max>
+       <watchdog-port>11321</watchdog-port>
+       <http port="11322"/> 
+    </server-default>   
+
+    <server  id="ptteng-0"  port="11323"/>   
+    <host id="" root-directory=".">
+      <web-app id="/" root-directory="/data/webs/cubilose/cubilose-admin-web/run">
+          <form-parameter-max>50</form-parameter-max>
+      </web-app>
+      <stdout-log     path="/data/webs/cubilose/cubilose-admin-web/containers/resin/log/stdout.log"
+                      archive-format="stdout-%Y%m%d.log"
+                      timestamp="[%Y.%m.%d %H:%M:%S.%s]"
+                      rollover-size="100mb"
+                      rollover-period="1D"/>
+      <stderr-log     path="/data/webs/cubilose/cubilose-admin-web/containers/resin/log/stderr.log"
+                      archive-format="stderr-%Y%m%d.log.gz"
+                      timestamp="[%Y.%m.%d %H:%M:%S.%s]"
+                      rollover-size="10mb"
+                      rollover-period="1D"/>
+      <access-log     path="/data/webs/cubilose/cubilose-admin-web/containers/resin/log/access.log"
+                      format='%D %{token}c  %h %t "%r" %s "%{X-Real-IP}i"  "%{Referer}i" %v %b '
+                      rollover-period="1D"/>
+    </host>
+  </cluster>
+</resin>
+
+前台resin配置
+
+<resin xmlns="http://caucho.com/ns/resin"
+       xmlns:resin="urn:java:com.caucho.resin">
+
+  <resin:properties path="${__DIR__}/resin.properties" optional="true"/>
+
+  <log-handler name="" level="all" path="stdout:"
+               timestamp="[%y-%m-%d %H:%M:%S.%s]"
+               format=" {${thread}} ${log.message}"/>
+               
+  <logger name="" level="${log_level?:'info'}"/>
+  <logger name="com.caucho.java" level="config"/>
+  <logger name="com.caucho.loader" level="config"/>
+  <resin:import path="${__DIR__}/cluster-default.xml"/>
+  <dependency-check-interval>1200s</dependency-check-interval>
+  <home-cluster>${home_cluster}</home-cluster>
+  <home-server>${home_server}</home-server>
+  <elastic-server>${elastic_server}</elastic-server>
+  <elastic-dns>${elastic_dns}</elastic-dns>
+
+  <cluster id="ptteng">
+
+    <server-default>
+             <jvm-arg> -Xms128m</jvm-arg>
+             <jvm-arg> -XX:PermSize=128m</jvm-arg>
+             <jvm-mode> -server   </jvm-mode>
+       <socket-timeout> 30s </socket-timeout>
+       <keepalive-max>512</keepalive-max>
+       <watchdog-port>11311</watchdog-port>
+       <http port="11312"/> 
+    </server-default>   
+
+    <server  id="ptteng-0"  port="11313"/>   
+    <host id="" root-directory=".">
+      <web-app id="/" root-directory="/data/webs/cubilose/cubilose-home-web/run">
+          <form-parameter-max>50</form-parameter-max>
+      </web-app>
+      <stdout-log     path="/data/webs/cubilose/cubilose-home-web/containers/resin/log/stdout.log"
+                      archive-format="stdout-%Y%m%d.log"
+                      timestamp="[%Y.%m.%d %H:%M:%S.%s]"
+                      rollover-size="100mb"
+                      rollover-period="1D"/>
+      <stderr-log     path="/data/webs/cubilose/cubilose-home-web/containers/resin/log/stderr.log"
+                      archive-format="stderr-%Y%m%d.log.gz"
+                      timestamp="[%Y.%m.%d %H:%M:%S.%s]"
+                      rollover-size="10mb"
+                      rollover-period="1D"/>
+      <access-log     path="/data/webs/cubilose/cubilose-home-web/containers/resin/log/access.log"
+                      format='%D %{token}c  %h %t "%r" %s "%{X-Real-IP}i"  "%{Referer}i" %v %b '
+                      rollover-period="1D"/>
+    </host>
+  </cluster>
+</resin>
+
