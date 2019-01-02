@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 注解驱动 -->
+    <mvc:annotation-driven />
+
+    <!--要扫描的Controller的package -->
+    <context:component-scan base-package="com.ptteng.academy.rich.controller" />
+
+    <!--使用default服务器处理静态资源-->
+    <mvc:default-servlet-handler />
+
+    <!--阿里云oss信息配置-->
+    <context:property-placeholder location="classpath:api.properties"/>
+
+    <bean class="com.ptteng.academy.rich.util.OssUtil">
+        <property name="endpoint" value="${oss.endpoint}"/>
+        <property name="accessKeyId" value="${oss.accessKeyId}"/>
+        <property name="accessKeySecret" value="${oss.accessKeySecret}"/>
+        <property name="bucketName" value="${oss.bucketName}"/>
+        <property name="realmName" value="${oss.realmName}"/>
+    </bean>
+
+    <!--阿里云短信和sendCloud账户密匙配置-->
+    <bean class="com.ptteng.academy.rich.util.BindUtil">
+        <property name="accessKeyId" value="${sms.accessKeyId}"/>
+        <property name="accessKeySecret" value="${sms.accessKeySecret}"/>
+
+        <property name="url" value="${sc.url}"/>
+        <property name="apiUser" value="${sc.apiUser}"/>
+        <property name="apiKey" value="${sc.apiKey}"/>
+        <property name="from" value="${sc.from}"/>
+        <property name="fromName" value="${sc.fromName}"/>
+        <property name="subject" value="${sc.subject}"/>
+
+    </bean>
+
+    <!--文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="maxUploadSize" value="52428800"></property>
+    </bean>
+
+
+    <!-- 3.配置jsp 显示ViewResolver ，根据前后缀获取view物理文件路径-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>-->
+        <property name="prefix">
+            <value>/WEB-INF/pages/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <!-- 国际化信息所在的文件名 -->
+        <property name="basename" value="message" />
+        <!-- 如果在国际化资源文件中找不到对应代码的信息，就用这个代码作为名称  -->
+        <property name="useCodeAsDefaultMessage" value="true" />
+    </bean>
+
+</beans>
