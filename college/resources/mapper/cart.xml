@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.collage.mapper.CartMapper">
+    <resultMap id="cart" type="com.collage.pojo.Cart">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="picture" jdbcType="VARCHAR" property="picture" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="wname" jdbcType="VARCHAR" property="wname" />
+        <result column="rname" jdbcType="VARCHAR" property="rname" />
+        <result column="num" jdbcType="INTEGER" property="num" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="price" jdbcType="DOUBLE" property="price" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, picture, name, wname, rname, num, type, price
+    </sql>
+    <select id="selectByIDMax" resultType="int" >
+        SELECT MAX(orderid) FROM bill
+    </select>
+    <select id="list" resultType="map">
+       select * from cart where rname is null and wname is null
+    </select>
+    <select id="selCart" resultMap="cart">
+        select * from cart where rname is null and wname is null
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from cart
+        where id = #{id}
+    </delete>
+    <insert id="insertSelective"  parameterType="Cart" >
+        insert into cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="picture != null">
+                picture,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="wname != null">
+                wname,
+            </if>
+            <if test="rname != null">
+                rname,
+            </if>
+            <if test="num != null">
+                num,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="picture != null">
+                #{picture},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="wname != null">
+                #{wname},
+            </if>
+            <if test="rname != null">
+                #{rname},
+            </if>
+            <if test="num != null">
+                #{num},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+        </trim>
+    </insert>
+
+
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.collage.mapper.WatierMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="watier" type="Watier">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, phone, status
+    </sql>
+
+    <select id="selectName" resultType="string">
+        SELECT name from watier
+    </select>
+    <select id="list" resultType="map">
+        select * from watier where id != ''
+        <if test="condition != null and condition != ''">
+            and name like CONCAT('%',#{condition},'%') or phone like CONCAT('%',#{condition},'%')
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+    </select>
+
+    <select id="selectById" parameterType="_int" resultMap="watier">
+        select * from watier where id=#{id}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from watier
+        where id = #{id}
+    </delete>
+
+
+    <insert id="insertWatier"  parameterType="Watier">
+        insert into watier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="Watier">
+        update watier
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.collage.controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+    <context:component-scan base-package="com.collage.service.impl"/>
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+
+    <bean id="beetlConfig" class="com.collage.utils.beetl.BeetlConfiguration" init-method="init">
+        <property name="configFileResource" value="classpath:beetl.properties"/>
+    </bean>
+
+    <bean name="beetlViewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+        <property name="config" ref="beetlConfig"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="order" value="0"/>
+        <property name="viewNames">
+            <list>
+                <value>/main/**</value>
+                <value>/common/**</value>
+                <value>/user/**</value>
+                <value>/role/**</value>
+                <value>/menu/**</value>
+                <value>/notice/**</value>
+                <value>/bill/**</value>
+                <value>/cook/**</value>
+                <value>/menus/**</value>
+                <value>/room/**</value>
+                <value>/evaluate/**</value>
+                <value>/watier/**</value>
+                <value>/stats/**</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"  value="org.springframework.web.servlet.view.JstlView" />
+       <!-- <property name="prefix" value="/WEB-INF/jsp/" />
+      <property name="suffix" value=".jsp" />-->
+  </bean>
+
+  <!-- 控制器异常处理 -->
+    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+    </bean>
+    <bean class="com.collage.utils.exception.DefaultExceptionHandler"/>
+
+
+    <!-- 多部分文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 上传图片最大大小100M（5M  5242440）-->
+        <property name="maxUploadSize" value="104857600" />
+        <property name="maxInMemorySize" value="4096" />
+        <!-- 设置默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>
+</beans>

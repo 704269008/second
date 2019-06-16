@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.collage.mapper.BillMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bill" type="Bill">
+        <id column="id" property="id" />
+        <result column="orderid" property="orderid" />
+        <result column="picture" property="picture" />
+        <result column="name" property="name" />
+        <result column="wname" property="wname" />
+        <result column="rname" property="rname" />
+        <result column="cname" property="cname" />
+        <result column="num" property="num" />
+        <result column="type" property="type" />
+        <result column="price" property="price" />
+        <result column="paystatus" property="paystatus" />
+        <result column="mealstatus" property="mealstatus" />
+        <result column="time" property="time" />
+    </resultMap>
+
+    <sql id="Column_List">
+        DISTINCT orderid,wname, rname,  paystatus, time
+    </sql>
+    <!-- 添加到bill -->
+    <insert id="insert" parameterType="Bill" >
+        insert into bill (id, orderid, picture,
+        name, wname, rname,
+        cname, num, type, price,
+        paystatus, mealstatus, time
+        )
+        values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{picture,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR}, #{wname,jdbcType=VARCHAR}, #{rname,jdbcType=VARCHAR},
+        #{cname,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE},
+        #{paystatus,jdbcType=INTEGER}, #{mealstatus,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <select id="selByOrderId" resultType="map">
+        select orderid,wname, rname,  paystatus, time
+        from bill where orderid=#{orderid}
+    </select>
+    <select id="selectBill" resultMap="bill" parameterType="_int">
+        select *
+        from bill where orderid=#{orderid}
+    </select>
+
+    <select id="getOrderIdList" resultType="map">
+        select
+        <include refid="Column_List" />
+        from bill where id !=''
+        <if test="name != null and name != ''">
+            and (wname like CONCAT('%',#{name},'%')
+            or rname like CONCAT('%',#{name},'%'))
+        </if>
+        <if test="paystatus != null and paystatus != ''">
+            and paystatus=#{paystatus}
+        </if>
+    </select>
+
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, orderid, picture, name, wname, rname, cname, num, type, price, paystatus, mealstatus, time
+    </sql>
+
+    <!--用户条件搜索-->
+    <select id="list" resultType="map">
+        select
+        <include refid="Base_Column_List" />
+        from bill where id !=''
+        <if test="name != null and name != ''">
+            and (name like CONCAT('%',#{name},'%')
+            or rname like CONCAT('%',#{name},'%'))
+        </if>
+        <if test="paystatus != null and paystatus != ''">
+            and paystatus=#{paystatus}
+        </if>
+        <if test="mealstatus != null and mealstatus != ''">
+            and mealstatus=#{mealstatus}
+        </if>
+
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (createTime between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+    </select>
+
+    <select id="selectById" parameterType="_int" resultMap="bill">
+        select * from bill where id=#{id}
+    </select>
+    <select id="selectByOrderId"   resultType="map">
+        select * from bill where orderid=#{orderid}
+    </select>
+
+    <update id="updateById" parameterType="Bill">
+        update bill
+        <set>
+            <if test="orderid != null">
+                orderid = #{orderid},
+            </if>
+            <if test="picture != null">
+                picture = #{picture},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="wname != null">
+                wname = #{wname},
+            </if>
+            <if test="rname != null">
+                rname = #{rname},
+            </if>
+            <if test="cname != null">
+                cname = #{cname},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="paystatus != null">
+                paystatus = #{paystatus},
+            </if>
+            <if test="mealstatus != null">
+                mealstatus = #{mealstatus},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectDayProfit" resultType="map">
+        select day(time) as dayt,SUM(price*num) as total from bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+         group by DAY(time)
+    </select>
+    <select id="selectMonthProfit" resultType="map">
+        select month(time) as dayt,SUM(price*num) as total from bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        group by MONTH(time)
+
+    </select>
+    <select id="selectYearProfit" resultType="map">
+         select year(time) as dayt,SUM(price*num) as total from bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+         group by YEAR(time)
+    </select>
+
+
+
+
+
+    <select id="selectDayMenus" resultType="map">
+        select day(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),type
+    </select>
+    <select id="legendDayMenus" resultType="map">
+        select DISTINCT type from (select day(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),type) as p
+    </select>
+    <select id="keyDayMenus" resultType="map">
+        select DISTINCT dayt from (select day(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),type) as p
+    </select>
+
+
+    <select id="selectMonthMenus" resultType="map">
+        select month(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),type
+    </select>
+    <select id="legendMonthMenus" resultType="map">
+        select DISTINCT type from (select month(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),type) as p
+    </select>
+    <select id="keyMonthMenus" resultType="map">
+        select DISTINCT dayt from (select month(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),type) as p
+    </select>
+
+
+    <select id="selectYearMenus" resultType="map">
+        select year(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),type
+    </select>
+    <select id="legendYearMenus" resultType="map">
+        select DISTINCT type from (select year(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),type) as p
+    </select>
+    <select id="keyYearMenus" resultType="map">
+        select DISTINCT dayt from (select year(time) as dayt,type,sum(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),type) as p
+    </select>
+
+
+
+
+
+    <select id="selectDayCook" resultType="map">
+        select day(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),cname
+    </select>
+    <select id="legendDayCook" resultType="map">
+        select DISTINCT cname from (select day(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),cname) as p
+    </select>
+    <select id="keyDayCook" resultType="map">
+        select DISTINCT dayt from (select day(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),cname) as p
+    </select>
+
+
+    <select id="selectMonthCook" resultType="map">
+        select MONTH(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),cname
+    </select>
+    <select id="legendMonthCook" resultType="map">
+        select DISTINCT cname from (select month(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY Month(time),cname) as p
+    </select>
+    <select id="keyMonthCook" resultType="map">
+        select DISTINCT dayt from (select month(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY Month(time),cname) as p
+    </select>
+
+    <select id="selectYearCook" resultType="map">
+        select year(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),cname
+    </select>
+    <select id="legendYearCook" resultType="map">
+        select DISTINCT cname from (select year(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY Year(time),cname) as p
+    </select>
+    <select id="keyYearCook" resultType="map">
+        select DISTINCT dayt from (select year(time) as dayt,cname,SUM(num) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY Year(time),cname) as p
+    </select>
+
+
+
+
+    <select id="selectDayWaiter" resultType="map">
+        select day(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),wname
+    </select>
+    <select id="legendDayWaiter" resultType="map">
+        select DISTINCT wname from (select day(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),wname) as p
+    </select>
+    <select id="keyDayWaiter" resultType="map">
+        select DISTINCT dayt from (select day(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY DAY(time),wname) as p
+    </select>
+
+    <select id="selectMonthWaiter" resultType="map">
+        select month(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),wname
+    </select>
+    <select id="legendMonthWaiter" resultType="map">
+        select DISTINCT wname from (select month(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),wname) as p
+    </select>
+    <select id="keyMonthWaiter" resultType="map">
+        select DISTINCT dayt from (select month(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY MONTH(time),wname) as p
+    </select>
+
+    <select id="selectYearWaiter" resultType="map">
+        select year(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),wname
+    </select>
+    <select id="legendYearWaiter" resultType="map">
+        select DISTINCT wname from (select year(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),wname) as p
+    </select>
+    <select id="keyYearWaiter" resultType="map">
+        select DISTINCT dayt from (select year(time) as dayt,wname,count(DISTINCT orderid) as total FROM bill
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            where (time between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+        GROUP BY YEAR(time),wname) as p
+    </select>
+
+</mapper>

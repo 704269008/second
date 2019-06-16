@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.collage.mapper.UserMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="user" type="User">
+        <id column="id" property="id" />
+        <result column="avatar" property="avatar" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="name" property="name" />
+        <result column="birthday" property="birthday" />
+        <result column="sex" property="sex" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="roleid" property="roleid" />
+        <result column="status" property="status" />
+        <result column="createtime" property="createtime" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, account, name, birthday, sex, email, avatar,
+        phone, roleid,
+        status,
+        createtime, version
+    </sql>
+
+    <sql id="Base_Column_List_With_Pwd">
+        id, account, name, birthday,password, sex, email, avatar,
+        phone, roleid,salt,
+        status,
+        createtime, version
+    </sql>
+
+    <select id="selectById" parameterType="_int" resultMap="user">
+        select * from sys_user where id=#{id}
+    </select>
+
+    <!--用户条件搜索-->
+    <select id="selectUsers" resultType="map">
+        select
+        <include refid="Base_Column_List" />
+        from sys_user
+        where status != 3
+        <if test="name != null and name != ''">
+            and (phone like CONCAT('%',#{name},'%')
+            or account like CONCAT('%',#{name},'%')
+            or name like CONCAT('%',#{name},'%'))
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and (createTime between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
+        </if>
+    </select>
+
+    <update id="setStatus">
+        update sys_user set status = #{status} where id =
+        #{userId}
+    </update>
+
+    <update id="changePwd">
+        update sys_user set password = #{pwd} where id =
+        #{userId}
+    </update>
+
+    <update id="setRoles">
+        update sys_user set roleid = #{roleIds} where id =
+        #{userId}
+    </update>
+
+
+    <select id="getByAccount" resultType="user">
+        select
+        <include refid="Base_Column_List_With_Pwd" />
+        from sys_user where account = #{account} and status != 3
+    </select>
+
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="user" useGeneratedKeys="true">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="avatar != null">
+                avatar,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="roleid != null">
+                roleid,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="avatar != null">
+                #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="roleid != null">
+                #{roleid,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="user">
+        update sys_user
+        <set>
+            <if test="avatar != null">
+                avatar = #{avatar},
+            </if>
+            <if test="account != null">
+                account = #{account},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="salt != null">
+                salt = #{salt},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="roleid != null">
+                roleid = #{roleid},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="insertUser"  parameterType="user" >
+        insert into sys_user (avatar, account, password,
+        salt, name, birthday,
+        sex, email, phone,
+        roleid, status, createtime,
+        version)
+        values (#{avatar}, #{account}, #{password},
+        #{salt}, #{name}, #{birthday},
+        #{sex}, #{email}, #{phone},
+        #{roleid}, #{status}, #{createtime},
+        #{version})
+    </insert>
+
+
+
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.collage.mapper.CookMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="cook" type="Cook">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="type" property="type" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, phone, type, status
+    </sql>
+    <select id="selectName">
+        SELECT name from cook
+    </select>
+
+    <select id="list" resultType="map">
+        select * from cook  where id != ''
+        <if test="condition != null and condition != ''">
+            and name like CONCAT('%',#{condition},'%') or phone like CONCAT('%',#{condition},'%')
+        </if>
+        <if test="type!= null and type != ''">
+            and type=#{type}
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+    </select>
+
+    <select id="selectById" parameterType="_int" resultMap="cook">
+        select * from cook where id=#{id}
+    </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from cook
+        where id = #{id}
+    </delete>
+
+    <insert id="insertCook"  parameterType="Cook" >
+        insert into cook
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="Cook">
+        update cook
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+</mapper>
