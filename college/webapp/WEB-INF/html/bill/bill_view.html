@@ -1,0 +1,33 @@
+
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>账单管理</h5>
+            </div>
+
+            <div class="ibox-content">
+                <input type="hidden" id="orderid" value="${orderid}">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <#table id="BillTable1"/>
+                    </div>
+                </div>
+                <div>
+                    <label style="color: #aa5500; font-size: x-large">总额: ${sum} 元</label>
+                </div>
+
+                <div class="row btn-group-m-t">
+                    <div class="col-sm-10">
+                        <#button btnCss="info" name="支付" id="ensure" icon="fa-check" clickFun="BillInfoDlg.editSubmit()"/>
+                        <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="BillInfoDlg.close()"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/system/bill/bill.js"></script>
+<script src="${ctxPath}/static/modular/system/bill/bill_info.js"></script>
+@}

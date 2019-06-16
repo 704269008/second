@@ -1,0 +1,42 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <!--<div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="orderid" name="订单号" value="${item[0].orderid}" underline="true"/>
+
+                            <#input id="wname" name="服务员姓名" value="${item[0].wname}" underline="true"/>
+                            <#input id="rname" name="房间名" value="${item[0].rname}" underline="true"/>
+
+                </div>
+
+                <div class="col-sm-6">
+
+                    <#select id="paystatus" name="付款状态"  value="${item[0].paystatus}" underline="true">
+                        <option value="1">未支付</option>
+                        <option value="2">已支付</option>
+                    </#select>
+
+                    <#input id="time" name="订单日期" value="${item[0].time}" underline="true" type="date" clickFun="laydate({istime: false, format: 'YYYY-MM-DD'})"/>
+                </div>
+            </div>-->
+            <div>
+                <#input id="orderid" name="订单号" value="${item[0].orderid}" underline="true"/>
+                <span>支付金额:${sum}</span>
+
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="支付" id="ensure" icon="fa-check" clickFun="BillInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="BillInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/system/bill/bill_info.js"></script>
+@}

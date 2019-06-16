@@ -1,0 +1,40 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <input type="hidden" id="id" value="${item.id}">
+
+            <div class="row">
+                <div class="col-sm-4 b-r">
+
+                            <#input id="name" name="房间名" value="${item.name}" />
+                </div>
+                <div class="col-sm-4 b-r">
+
+                    <#input id="type" name="房间类型" value="${item.type}" />
+                </div>
+
+                <div class="col-sm-4">
+
+                    <#select id="status" name="状态" underline="true" value="${item.status}">
+                        <option value="1">空闲</option>
+                        <option value="2">使用中</option>
+                        <option value="3">预订</option>
+                        <option value="4">故障</option>
+                    </#select>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="RoomInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="RoomInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/system/room/room_info.js"></script>
+@}

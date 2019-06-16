@@ -1,0 +1,43 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <input type="hidden" id="id" value="">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+
+                            <#input id="name" name="姓名" underline="true"/>
+                            <#input id="phone" name="电话"/>
+                </div>
+
+                <div class="col-sm-6 b-r">
+                    <#select id="type" name="类型" underline="true" >
+                        <option value="1">荤菜</option>
+                        <option value="2">海鲜</option>
+                        <option value="3">凉菜</option>
+                        <option value="4">汤类</option>
+                        <option value="5">酒水</option>
+                        <option value="6">瓜果</option>
+                        <option value="7">甜点</option>
+                    </#select>
+                    <#select id="status" name="状态" underline="true" >
+                        <option value="1">正常</option>
+                        <option value="2">休息</option>
+                    </#select>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="CookInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="CookInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/system/cook/cook_info.js"></script>
+@}

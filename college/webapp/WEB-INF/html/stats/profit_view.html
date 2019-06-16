@@ -1,0 +1,190 @@
+@layout("/common/_container.html"){
+<div class="col-lg-4 col-sm-6">
+    <#TimeCon id="beginTime" name="开始日期" isTime="false" pattern="YYYY-MM-DD"/>
+</div>
+<div class="col-lg-4 col-sm-6">
+    <#TimeCon id="endTime" name="结束日期" isTime="false" pattern="YYYY-MM-DD"/>
+</div>
+<div class="col-lg-4 col-sm-6">
+    <#select id="status" name="状态" underline="true">
+        <option value="1">日搜索</option>
+        <option value="2">月搜索</option>
+        <option value="3">年搜索</option>
+    </#select>
+</div>
+</div>
+    <input type="button" value="搜索"
+           onclick="reloadPage()" />
+</div>
+<script type="text/javascript">
+    function reloadPage()
+    {
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom);
+        var names=[];    //类别数组（实际用来盛放X轴坐标值）
+        var nums=[];    //销量数组（实际用来盛放Y坐标值）
+        option = null;
+        $.ajax({
+            type : "post",
+            async : true,
+            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url : "/stats/profit_day",    //请求发送到TestServlet处
+            data : {"beginTime":$("#beginTime").val(),"endTime":$("#endTime").val(),"status":$("#status").val()},
+            dataType : "json",
+            //返回数据形式为json
+            success : function(result) {
+
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    for(var i=0;i<result.length;i++){
+                        if(result)
+                        names.push(result[i].dayt);    //挨个取出类别并填入类别数组
+                    }
+                    for(var j=0;j<result.length;j++){
+                        nums.push(result[j].total);    //挨个取出销量并填入销量数组
+                    }
+                    myChart.hideLoading();
+                    //隐藏加载动画
+                    myChart.setOption({
+                        title: {
+                            text: '盈利统计图'
+                        },
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                label: {
+                                    backgroundColor: '#6a7985'
+                                }
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+
+                        xAxis: {
+                            type: 'category',
+                            data: names
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            data: nums,
+                            type: 'line'
+                        }]
+                    });
+                }
+            },
+
+            error : function(errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+
+        if (option && typeof option === "object") {
+            var startTime = +new Date();
+            myChart.setOption(option, true);
+            var endTime = +new Date();
+            var updateTime = endTime - startTime;
+            console.log("Time used:", updateTime);
+        }
+    }
+</script>
+
+
+            <div id="container" style="height:500px;width: 1000px;margin: 0 auto;"></div>
+            <script type="text/javascript">
+                var dom = document.getElementById("container");
+                var myChart = echarts.init(dom);
+                var names=[];    //类别数组（实际用来盛放X轴坐标值）
+                var nums=[];    //销量数组（实际用来盛放Y坐标值）
+                option = null;
+                $.ajax({
+                    type : "post",
+                    async : true,
+                    //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+                    url : "/stats/profit_day",    //请求发送到TestServlet处
+                    data : {"beginTime":$("#beginTime").val(),"endTime":$("#endTime").val()},
+                    dataType : "json",
+                    //返回数据形式为json
+                    success : function(result) {
+
+                        //请求成功时执行该函数内容，result即为服务器返回的json对象
+                        if (result) {
+                            for(var i=0;i<result.length;i++){
+                                names.push(result[i].dayt);    //挨个取出类别并填入类别数组
+                            }
+                            for(var j=0;j<result.length;j++){
+                                nums.push(result[j].total);    //挨个取出销量并填入销量数组
+                            }
+                            myChart.hideLoading();
+                            //隐藏加载动画
+                            myChart.setOption({
+                                title: {
+                                    text: '盈利统计图'
+                                },
+                                tooltip : {
+                                    trigger: 'axis',
+                                    axisPointer: {
+                                        type: 'cross',
+                                        label: {
+                                            backgroundColor: '#6a7985'
+                                        }
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                grid: {
+                                    left: '3%',
+                                    right: '4%',
+                                    bottom: '3%',
+                                    containLabel: true
+                                },
+
+                                xAxis: {
+                                    type: 'category',
+                                    data: names
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [{
+                                    data: nums,
+                                    type: 'line'
+                                }]
+                            });
+                        }
+                    },
+
+                    error : function(errorMsg) {
+                        //请求失败时执行该函数
+                        alert("图表请求数据失败!");
+                        myChart.hideLoading();
+                    }
+                })
+
+                if (option && typeof option === "object") {
+                    var startTime = +new Date();
+                    myChart.setOption(option, true);
+                    var endTime = +new Date();
+                    var updateTime = endTime - startTime;
+                    console.log("Time used:", updateTime);
+                }
+            </script>
+
+
+@}

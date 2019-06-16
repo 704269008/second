@@ -1,0 +1,228 @@
+@layout("/common/_container.html"){
+<div class="col-lg-4 col-sm-6">
+    <#TimeCon id="beginTime" name="开始日期" isTime="false" pattern="YYYY-MM-DD"/>
+</div>
+<div class="col-lg-4 col-sm-6">
+    <#TimeCon id="endTime" name="结束日期" isTime="false" pattern="YYYY-MM-DD"/>
+</div>
+<div class="col-lg-4 col-sm-6">
+    <#select id="status" name="状态" underline="true">
+        <option value="1">日搜索</option>
+        <option value="2">月搜索</option>
+        <option value="3">年搜索</option>
+    </#select>
+</div>
+</div>
+<input type="button" value="搜索"
+       onclick="reloadPage()" />
+</div>
+<script type="text/javascript">
+    function reloadPage()
+    {
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom);
+        var option={
+            title: {
+                text: '服务员业绩统计图'
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data:[]
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+
+            xAxis: {
+                type: 'category',
+                data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: []
+        }
+        $.ajax({
+            type : "post",
+            async : true,
+            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url : "/stats/watier_day",    //请求发送到TestServlet处
+            data : {"beginTime":$("#beginTime").val(),"endTime":$("#endTime").val(),"status":$("#status").val()},
+            dataType : "json",
+            //返回数据形式为json
+            success : function(result) {
+                var nameList=result.nameList;
+                var valueList=result.valueList;
+                var keyList=result.keyList;
+                var series=[];
+                var names=[];
+                var keys=[];
+                var values=[];
+                for(var w=0;w<keyList.length;w++){
+                    keys.push(keyList[w].dayt);    //挨个取出类别并填入类别数组
+                }
+                var Item=function () {
+                    return{
+                        name:'',
+                        type:'line',
+                        smooth:true,
+                        itemStyle:{normal:{areaStyle:{type:'default'}}},
+                        data:{}
+                    }
+                }
+                for(var i=0;i<nameList.length;i++){
+                    var tp=new Item();
+                    tp.name=nameList[i].wname;
+                    names.push(tp.name);
+                    for(var j in valueList[i]){
+                        values.push(valueList[i][j]);
+                    }
+                    tp.data=values;
+                    series.push(tp);
+                    values=[];
+                }
+                option.xAxis.data=keys;
+                option.legend.data=names;
+                option.series=series;
+                myChart.hideLoading();
+                myChart.setOption(option);
+            },
+
+            error : function(errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+        if (option && typeof option === "object") {
+            var startTime = +new Date();
+            myChart.setOption(option, true);
+            var endTime = +new Date();
+            var updateTime = endTime - startTime;
+            console.log("Time used:", updateTime);
+        }
+    }
+</script>
+
+
+<div id="container" style="height:500px;width: 1000px;margin: 0 auto;"></div>
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var option={
+        title: {
+            text: '服务员业绩统计图'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
+        },
+        legend: {
+            data:[]
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+
+        xAxis: {
+            type: 'category',
+            data: []
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: []
+    }
+    $.ajax({
+        type : "post",
+        async : true,
+        //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        url : "/stats/watier_day",    //请求发送到TestServlet处
+        data : {},
+        dataType : "json",
+        //返回数据形式为json
+        success : function(result) {
+            var nameList=result.nameList;
+            var valueList=result.valueList;
+            var keyList=result.keyList;
+            var series=[];
+            var names=[];
+            var keys=[];
+            var values=[];
+            for(var w=0;w<keyList.length;w++){
+                keys.push(keyList[w].dayt);    //挨个取出类别并填入类别数组
+            }
+            var Item=function () {
+                return{
+                    name:'意向',
+                    type:'line',
+                    smooth:true,
+                    itemStyle:{normal:{areaStyle:{type:'default'}}},
+                    data:{}
+                }
+            }
+            for(var i=0;i<nameList.length;i++){
+                var tp=new Item();
+                tp.name=nameList[i].wname;
+                names.push(tp.name);
+                for(var j in valueList[i]){
+                    values.push(valueList[i][j]);
+                }
+                tp.data=values;
+                series.push(tp);
+                values=[];
+            }
+            option.xAxis.data=keys;
+            option.legend.data=names;
+            option.series=series;
+            myChart.hideLoading();
+            myChart.setOption(option);
+        },
+
+        error : function(errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
+
+    if (option && typeof option === "object") {
+        var startTime = +new Date();
+        myChart.setOption(option, true);
+        var endTime = +new Date();
+        var updateTime = endTime - startTime;
+        console.log("Time used:", updateTime);
+    }
+</script>
+
+
+@}

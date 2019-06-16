@@ -1,0 +1,63 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>菜品管理</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <#NameCon id="condition" name="名称" placeholder="菜名/简介"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <#select id="type" name="类型" underline="true">
+                                    <option value="">--请选择类型--</option>
+                                    <option value="1">荤菜</option>
+                                    <option value="2">海鲜</option>
+                                    <option value="3">凉菜</option>
+                                    <option value="4">汤类</option>
+                                    <option value="5">酒水</option>
+                                    <option value="6">瓜果</option>
+                                    <option value="7">甜点</option>
+                                </#select>
+                            </div>
+                            <div class="col-sm-3">
+                                <#select id="status" name="状态" underline="true">
+                                    <option value="">--请选择状态--</option>
+                                    <option value="1">上架</option>
+                                    <option value="2">下架</option>
+                                </#select>
+                            </div>
+                            <div class="col-sm-3">
+                                <#button name="搜索" icon="fa-search" clickFun="Menu.search()"/>
+                            </div>
+                        </div>
+                        <div class="hidden-xs" id="MenuTableToolbar" role="group">
+                            @if(shiro.hasPermission("/menus/add")){
+                                <#button name="添加" icon="fa-plus" clickFun="Menu.openAddMenu()"/>
+                            @}
+                            @if(shiro.hasPermission("/menus/update")){
+                                <#button name="修改" icon="fa-plus" clickFun="Menu.openMenuDetail()" space="true"/>
+                            @}
+                            @if(shiro.hasPermission("/menus/delete")){
+                                <#button name="删除" icon="fa-plus" clickFun="Menu.delete()" space="true"/>
+                            @}
+                            @if(shiro.hasPermission("/menus/gwc")){
+                            <#button name="加入购物车" icon="fa-plus" clickFun="Menu.gwc()" space="true"/>
+                            @}
+                            @if(shiro.hasPermission("/menus/details")){
+                            <#button name="查看购物车" icon="fa-plus" clickFun="Menu.openDetails()" space="true"/>
+                            @}
+                        </div>
+                        <#table id="MenuTable"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/system/menus/menu.js"></script>
+@}
